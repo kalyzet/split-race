@@ -24,7 +24,13 @@ func _ready() -> void:
 
 func _on_start_button_pressed() -> void:
 	GameManager.lap_count = LAP_OPTIONS[%LapsOption.selected]
-	GameManager.difficulty = GameManager.Difficulty(%DifficultyOption.selected)
+	match int(%DifficultyOption.selected):
+		0:
+			GameManager.difficulty = GameManager.Difficulty.EASY
+		1:
+			GameManager.difficulty = GameManager.Difficulty.NORMAL
+		_:
+			GameManager.difficulty = GameManager.Difficulty.HARD
 	GameManager.start_race()
 
 
