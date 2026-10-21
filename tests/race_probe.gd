@@ -1,7 +1,7 @@
 extends Node
 
 var frames := 0
-var race: Node2D
+var race
 var results_tested := false
 
 

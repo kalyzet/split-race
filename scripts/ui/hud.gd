@@ -12,10 +12,10 @@ extends CanvasLayer
 @onready var countdown_label: Label = %CountdownLabel
 @onready var pause_layer: CanvasLayer = %PauseLayer
 
-var race: Node2D
+var race
 
 
-func bind(race_manager: Node2D) -> void:
+func bind(race_manager) -> void:
 	race = race_manager
 	var multi := GameManager.game_mode == GameManager.GameMode.LOCAL_MULTIPLAYER
 	p2_box.visible = multi

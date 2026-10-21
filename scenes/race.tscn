@@ -5,7 +5,13 @@
 [ext_resource type="Script" path="res://scripts/race/race_camera.gd" id="3_cam"]
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="4_hud"]
 
-[node name="Race" type="Node2D"]
+[node name="Race" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 script = ExtResource("1_mgr")
 
 [node name="SplitScreen" type="VBoxContainer" parent="."]
