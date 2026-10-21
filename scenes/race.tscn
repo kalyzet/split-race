@@ -1,0 +1,52 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/race/race_manager.gd" id="1_mgr"]
+[ext_resource type="PackedScene" path="res://scenes/tracks/track_01.tscn" id="2_track"]
+[ext_resource type="Script" path="res://scripts/race/race_camera.gd" id="3_cam"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="4_hud"]
+
+[node name="Race" type="Node2D"]
+script = ExtResource("1_mgr")
+
+[node name="SplitScreen" type="VBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="ViewportContainer1" type="SubViewportContainer" parent="SplitScreen"]
+stretch = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Viewport1" type="SubViewport" parent="SplitScreen/ViewportContainer1"]
+size = Vector2i(1280, 720)
+render_target_update_mode = 4
+
+[node name="World" type="Node2D" parent="SplitScreen/ViewportContainer1/Viewport1"]
+
+[node name="Track" parent="SplitScreen/ViewportContainer1/Viewport1/World" instance=ExtResource("2_track")]
+
+[node name="Cars" type="Node2D" parent="SplitScreen/ViewportContainer1/Viewport1/World"]
+
+[node name="CameraPlayer1" type="Camera2D" parent="SplitScreen/ViewportContainer1/Viewport1/World"]
+zoom = Vector2(1.7, 1.7)
+script = ExtResource("3_cam")
+
+[node name="ViewportContainer2" type="SubViewportContainer" parent="SplitScreen"]
+visible = false
+stretch = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Viewport2" type="SubViewport" parent="SplitScreen/ViewportContainer2"]
+size = Vector2i(1280, 720)
+render_target_update_mode = 4
+
+[node name="CameraPlayer2" type="Camera2D" parent="SplitScreen/ViewportContainer2/Viewport2"]
+zoom = Vector2(1.7, 1.7)
+script = ExtResource("3_cam")
+
+[node name="HUD" parent="." instance=ExtResource("4_hud")]

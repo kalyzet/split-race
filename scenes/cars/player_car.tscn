@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/cars/car.tscn" id="1_base"]
+[ext_resource type="Script" path="res://scripts/car/player_controller.gd" id="2_ctrl"]
+
+[node name="PlayerCar" instance=ExtResource("1_base")]
+
+[node name="Controller" parent="." index="2"]
+script = ExtResource("2_ctrl")

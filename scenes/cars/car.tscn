@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/car/car.gd" id="1_car"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(48, 26)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body_large"]
+size = Vector2(48, 26)
+
+[node name="Car" type="CharacterBody2D"]
+collision_layer = 2
+collision_mask = 3
+script = ExtResource("1_car")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_body")
+
+[node name="Visual" type="Node2D" parent="."]
+
+[node name="Body" type="Polygon2D" parent="Visual"]
+polygon = PackedVector2Array(-24, -13, 10, -13, 24, -8, 24, 8, 10, 13, -24, 13)
+color = Color(1, 1, 1, 1)
+
+[node name="Cabin" type="Polygon2D" parent="Visual"]
+polygon = PackedVector2Array(-12, -9, 0, -9, 0, 9, -12, 9)
+color = Color(0.18, 0.2, 0.24, 1)
+
+[node name="Controller" type="Node" parent="."]

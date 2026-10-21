@@ -1,0 +1,81 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/race_setup.gd" id="1_setup"]
+
+[node name="RaceSetup" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_setup")
+
+[node name="Center" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Menu" type="VBoxContainer" parent="Center"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="TitleLabel" type="Label" parent="Center/Menu"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "RACE SETUP"
+horizontal_alignment = 1
+
+[node name="ModeLabel" type="Label" parent="Center/Menu"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "SINGLE PLAYER"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="Center/Menu"]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+
+[node name="LapsLabel" type="Label" parent="Center/Menu"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "LAPS"
+
+[node name="LapsOption" type="OptionButton" parent="Center/Menu"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(340, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+
+[node name="DifficultyLabel" type="Label" parent="Center/Menu"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "DIFFICULTY (CPU)"
+
+[node name="DifficultyOption" type="OptionButton" parent="Center/Menu"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(340, 50)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+
+[node name="Spacer2" type="Control" parent="Center/Menu"]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+
+[node name="StartButton" type="Button" parent="Center/Menu"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(340, 60)
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "START RACE"
+
+[node name="BackButton" type="Button" parent="Center/Menu"]
+custom_minimum_size = Vector2(340, 54)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "BACK"
+
+[connection signal="pressed" from="Center/Menu/StartButton" to="." method="_on_start_button_pressed"]
+[connection signal="pressed" from="Center/Menu/BackButton" to="." method="_on_back_button_pressed"]
