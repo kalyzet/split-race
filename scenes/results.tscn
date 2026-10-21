@@ -70,4 +70,4 @@ theme_override_font_sizes/font_size = 24
 text = "Home"
 
 [connection signal="pressed" from="Center/Menu/Buttons/AgainButton" to="." method="_on_again_button_pressed"]
-[connection signal="pressed" from="Center/Menu/Buttons/HomeButton" to="." method="_on_home_pressed"]
+[connection signal="pressed" from="Center/Menu/Buttons/HomeButton" to="." method="_on_home_button_pressed"]
