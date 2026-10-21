@@ -1,0 +1,23 @@
+# Godot 4+ cache and import data
+.godot/
+.import/
+/android/
+
+# Exported builds
+build/
+export/
+*.translation
+
+# Editor and IDE
+.vscode/
+.idea/
+*.sublime-workspace
+
+# OS metadata
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs and temporary files
+*.log
+*.tmp

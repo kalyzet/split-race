@@ -37,6 +37,20 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "POS 1/7"
 
+[node name="Spacer" type="Control" parent="Root/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TimeLabel" type="Label" parent="Root/TopBar"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "00:00.00"
+
+[node name="Spacer2" type="Control" parent="Root/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
 [node name="P2Box" type="VBoxContainer" parent="Root/TopBar"]
 unique_name_in_owner = true
 visible = false
@@ -53,16 +67,6 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "POS 1/7"
-
-[node name="Spacer" type="Control" parent="Root/TopBar"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="TimeLabel" type="Label" parent="Root/TopBar"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_font_sizes/font_size = 26
-text = "00:00.00"
 
 [node name="BottomBar" type="HBoxContainer" parent="Root"]
 anchors_preset = 12
@@ -91,6 +95,10 @@ layout_mode = 2
 max_value = 100.0
 value = 100.0
 show_percentage = false
+
+[node name="Spacer3" type="Control" parent="Root/BottomBar"]
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="P2TurboBox" type="HBoxContainer" parent="Root/BottomBar"]
 unique_name_in_owner = true
