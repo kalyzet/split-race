@@ -38,6 +38,7 @@ var _multiplayer: bool = false
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	process_physics_priority = 10
 	_multiplayer = GameManager.game_mode == GameManager.GameMode.LOCAL_MULTIPLAYER
 	_curve = track.curve
 	_cp_count = track.get_checkpoint_count()
@@ -93,10 +94,39 @@ func _physics_process(_delta: float) -> void:
 		return
 	if state == State.FINISHED:
 		return
+	_resolve_car_collisions()
 	for c in cars:
 		if not c.is_finished:
 			c.path_offset = _curve.get_closest_offset(c.global_position)
 	_update_ranking()
+
+
+func _resolve_car_collisions() -> void:
+	var min_dist := Car.COLLISION_RADIUS * 2.0
+	for i in cars.size():
+		var a := cars[i]
+		if a.is_finished or a.frozen:
+			continue
+		for j in range(i + 1, cars.size()):
+			var b := cars[j]
+			if b.is_finished or b.frozen:
+				continue
+			var offset := b.global_position - a.global_position
+			var dist := offset.length()
+			if dist >= min_dist:
+				continue
+			var normal := offset.normalized() if dist > 0.001 else Vector2.RIGHT.rotated(a.rotation)
+			var overlap := min_dist - dist
+			a.global_position -= normal * overlap * 0.5
+			b.global_position += normal * overlap * 0.5
+			var approach := (b.velocity - a.velocity).dot(normal)
+			if approach < 0.0:
+				var impulse := -approach * 0.5
+				a.apply_knockback(-normal * impulse)
+				b.apply_knockback(normal * impulse)
+				if -approach > 40.0:
+					a.speed *= 0.97
+					b.speed *= 0.97
 
 
 func get_position_of(car: Car) -> int:

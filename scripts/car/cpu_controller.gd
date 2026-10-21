@@ -62,7 +62,7 @@ func _physics_process(delta: float) -> void:
 
 	if car.speed < 15.0:
 		_stuck_time += delta
-		if _stuck_time > 1.5:
+		if _stuck_time > 2.5:
 			_recover()
 			_stuck_time = 0.0
 	else:

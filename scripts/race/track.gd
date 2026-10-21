@@ -6,9 +6,7 @@ const CheckpointScript := preload("res://scripts/race/checkpoint.gd")
 @export var centerline: PackedVector2Array
 @export var point_widths: PackedFloat32Array
 @export var checkpoint_offsets: PackedFloat32Array = PackedFloat32Array([0.0, 0.2, 0.4, 0.6, 0.8])
-@export var wall_thickness: float = 28.0
 @export var visual_step: float = 12.0
-@export var wall_step: float = 36.0
 
 var curve := Curve2D.new()
 
@@ -131,35 +129,19 @@ func _build_walls() -> void:
 	boundaries.collision_mask = 0
 	add_child(boundaries)
 
-	var total_len := curve.get_baked_length()
-	var sample_positions := PackedFloat32Array()
-	var o := 0.0
-	while o <= total_len:
-		sample_positions.append(o)
-		o += wall_step
-	if sample_positions[sample_positions.size() - 1] < total_len - 1.0:
-		sample_positions.append(total_len)
+	var data := _sample_road()
+	var left: PackedVector2Array = data["left"]
+	var right: PackedVector2Array = data["right"]
 
 	for side_index in 2:
-		var side: float = 1.0 if side_index == 0 else -1.0
-		for i in sample_positions.size():
-			var o0: float = sample_positions[i]
-			var o1: float = sample_positions[(i + 1) % sample_positions.size()]
-			var p0 := curve.sample_baked(o0)
-			var p1 := curve.sample_baked(fposmod(o1, total_len))
-			var t := _tangent_at(o0)
-			var n := t.orthogonal() * side
-			var w0 := width_at_offset(o0) * 0.5
-			var mid := ((p0 + n * (w0 + wall_thickness * 0.5)) + (p1 + n * (w0 + wall_thickness * 0.5))) * 0.5
-			var seg_len := p0.distance_to(p1) + 4.0
-
-			var shape_node := CollisionShape2D.new()
-			var box := RectangleShape2D.new()
-			box.size = Vector2(seg_len, wall_thickness)
-			shape_node.shape = box
-			shape_node.position = mid
-			shape_node.rotation = t.angle()
-			boundaries.add_child(shape_node)
+		var points: PackedVector2Array = left if side_index == 0 else right
+		if points[0].distance_to(points[points.size() - 1]) > 0.5:
+			points.append(points[0])
+		var wall := CollisionPolygon2D.new()
+		wall.name = "WallLeft" if side_index == 0 else "WallRight"
+		wall.build_mode = CollisionPolygon2D.BUILD_SEGMENTS
+		wall.polygon = points
+		boundaries.add_child(wall)
 
 
 func _build_checkpoints() -> void:

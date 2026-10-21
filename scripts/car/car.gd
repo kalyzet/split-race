@@ -1,6 +1,12 @@
 class_name Car
 extends CharacterBody2D
 
+const COLLISION_RADIUS := 22.0
+const KNOCKBACK_DECAY := 5.0
+const KNOCKBACK_MAX := 260.0
+const SCRAPE_RECOVERY := 900.0
+const TURBO_FADE := 500.0
+
 @export_group("Movement")
 @export var max_speed: float = 420.0
 @export var acceleration: float = 380.0
@@ -38,7 +44,7 @@ var lap_times: Array[float] = []
 var car_id: int = 0
 var color_name: String = ""
 
-var _push: Vector2 = Vector2.ZERO
+var _knockback: Vector2 = Vector2.ZERO
 
 
 func set_color(color: Color) -> void:
@@ -46,11 +52,10 @@ func set_color(color: Color) -> void:
 		_body_poly.color = color
 
 
-func apply_push(impulse: Vector2) -> void:
+func apply_knockback(impulse: Vector2) -> void:
 	if is_finished:
 		return
-	_push += impulse
-	speed *= 0.9
+	_knockback = (_knockback + impulse).limit_length(KNOCKBACK_MAX)
 
 
 func mark_finished(time: float) -> void:
@@ -58,7 +63,7 @@ func mark_finished(time: float) -> void:
 	finish_time = time
 	speed = 0.0
 	velocity = Vector2.ZERO
-	_push = Vector2.ZERO
+	_knockback = Vector2.ZERO
 	collision_layer = 0
 
 
@@ -69,12 +74,11 @@ func _physics_process(delta: float) -> void:
 	if frozen:
 		speed = 0.0
 		velocity = Vector2.ZERO
-		_push = Vector2.ZERO
+		_knockback = Vector2.ZERO
 		return
 
 	_update_turbo(delta)
 	_update_movement(delta)
-	_handle_collisions()
 
 
 func _update_turbo(delta: float) -> void:
@@ -95,30 +99,27 @@ func _update_movement(delta: float) -> void:
 		var speed_ratio := clampf(speed / max_speed, 0.0, 1.0)
 		var turn_rate := lerpf(base_turn_rate, min_turn_rate, speed_ratio)
 		rotation += clampf(diff, -turn_rate * delta, turn_rate * delta)
-		speed = minf(speed + acceleration * delta, effective_max)
+		var heading := Vector2.RIGHT.rotated(rotation)
+		var alignment := maxf(0.25, heading.dot(drive_direction))
+		speed += acceleration * alignment * delta
 	else:
 		speed = maxf(speed - friction * delta, 0.0)
 
 	if wants_brake:
 		speed = maxf(speed - brake_force * delta, 0.0)
 
-	speed = minf(speed, effective_max)
+	if speed > effective_max:
+		speed = move_toward(speed, effective_max, TURBO_FADE * delta)
 
 	var heading := Vector2.RIGHT.rotated(rotation)
-	velocity = heading * speed + _push
+	velocity = heading * speed + _knockback
+	var before := global_position
 	move_and_slide()
-	_push = _push.move_toward(Vector2.ZERO, 220.0 * delta)
 
+	var actual_speed := before.distance_to(global_position) / maxf(delta, 0.0001)
+	if actual_speed < speed - 5.0:
+		speed = move_toward(speed, actual_speed, SCRAPE_RECOVERY * delta)
 
-func _handle_collisions() -> void:
-	for i in get_slide_collision_count():
-		var col := get_slide_collision(i)
-		var collider := col.get_collider()
-		if collider is Car:
-			var other := collider as Car
-			if other.is_finished:
-				continue
-			var n := col.get_normal()
-			_push += n * 50.0
-			speed *= 0.9
-			other.apply_push(-n * 130.0)
+	_knockback *= exp(-KNOCKBACK_DECAY * delta)
+	if _knockback.length_squared() < 25.0:
+		_knockback = Vector2.ZERO
