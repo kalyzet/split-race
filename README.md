@@ -89,6 +89,9 @@ godot --headless --path . res://tests/full_race_probe.tscn
 # Fisika: gesek dinding dan tabrakan head-on
 godot --headless --path . res://tests/physics_probe.tscn
 
+# Kesulitan CPU, timing lap 1, dan ranking di garis start
+godot --headless --path . res://tests/difficulty_timing_probe.tscn
+
 # Multiplayer: world sharing, split-screen, kamera, layar hasil
 godot --headless --path . res://tests/race_probe.tscn
 

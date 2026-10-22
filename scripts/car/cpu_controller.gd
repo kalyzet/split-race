@@ -24,6 +24,10 @@ func _ready() -> void:
 func setup(p_curve: Curve2D, p_params: Dictionary) -> void:
 	curve = p_curve
 	params = p_params
+	if car == null:
+		car = get_parent() as Car
+	if car != null:
+		car.max_speed *= float(params["speed_mult"])
 
 
 func _physics_process(delta: float) -> void:

@@ -72,6 +72,7 @@ func _process(delta: float) -> void:
 				_begin_racing()
 		State.GO:
 			_state_t -= delta
+			race_time += delta
 			hud.set_countdown("GO!")
 			if _state_t <= 0.0:
 				state = State.RACING
@@ -213,7 +214,15 @@ func _car_rank(a: Car, b: Car) -> bool:
 	var pb := b.next_checkpoint if b.next_checkpoint != 0 else _cp_count
 	if pa != pb:
 		return pa > pb
-	return a.path_offset > b.path_offset
+	var total_len := _curve.get_baked_length()
+	var ao := a.path_offset
+	var bo := b.path_offset
+	if a.lap == 0 and a.next_checkpoint == 1:
+		if ao > total_len * 0.5:
+			ao -= total_len
+		if bo > total_len * 0.5:
+			bo -= total_len
+	return ao > bo
 
 
 func _finish_race() -> void:
